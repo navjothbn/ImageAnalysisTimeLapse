@@ -122,7 +122,7 @@ pydeck==0.7.1
 Pygments==2.10.0
 Pympler==0.9
 pyparsing==3.0.6
-pyproj==3.3.0
+pyproj
 PyQt6==6.2.1
 PyQt6-3D==6.1.1
 PyQt6-3D-Qt6==6.2.1
