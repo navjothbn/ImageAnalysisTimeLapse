@@ -16,3 +16,4 @@ six==1.16.0
 streamlit==1.2.0
 tensorflow==2.7.0
 tensorflow_addons==0.15.0
+ee
