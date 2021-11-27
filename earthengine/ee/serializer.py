@@ -38,25 +38,19 @@ def DatetimeToMicroseconds(date):
 class Serializer(object):
   """A serializer for EE object trees."""
 
-  def __init__(self,
-               is_compound=True,
-               for_cloud_api=False,
-               unbound_name=None):
+  def __init__(self, is_compound=True, for_cloud_api=False):
     """Constructs a serializer.
 
     Args:
       is_compound: Whether the encoding should factor out shared subtrees.
       for_cloud_api: Whether the encoding should be done for the Cloud API or
         the legacy API.
-      unbound_name: Provides a name for unbound variables in objects.
     """
 
     # Whether the encoding should factor out shared subtrees.
     self._is_compound = bool(is_compound)
 
     self._for_cloud_api = bool(for_cloud_api)
-
-    self.unbound_name = unbound_name
 
     # A list of shared subtrees as [name, value] pairs.
     self._scope = []
@@ -278,7 +272,7 @@ class Serializer(object):
       return result
 
 
-def encode(obj, is_compound=True, for_cloud_api=True, unbound_name=None):
+def encode(obj, is_compound=True, for_cloud_api=True):
   """Serialize an object to a JSON-compatible structure for API calls.
 
   Args:
@@ -286,15 +280,11 @@ def encode(obj, is_compound=True, for_cloud_api=True, unbound_name=None):
     is_compound: Whether the encoding should factor out shared subtrees.
     for_cloud_api: Whether the encoding should be done for the Cloud API or the
       legacy API.
-    unbound_name: Provides a name for unbound variables in objects. Unbound
-      variables are otherwise disallowed. See the Count Functions usage in
-      customfunction.py.
 
   Returns:
     A JSON-compatible structure representing the input.
   """
-  serializer = Serializer(
-      is_compound, for_cloud_api=for_cloud_api, unbound_name=unbound_name)
+  serializer = Serializer(is_compound, for_cloud_api=for_cloud_api)
   return serializer._encode(obj)  # pylint: disable=protected-access
 
 

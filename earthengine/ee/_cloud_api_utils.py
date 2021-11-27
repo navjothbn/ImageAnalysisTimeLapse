@@ -140,26 +140,15 @@ def build_cloud_resource(api_base_url,
     alt_model = model.RawModel()
   else:
     alt_model = None
-
-  def build(**kwargs):
-    return discovery.build(
-        'earthengine',
-        VERSION,
-        discoveryServiceUrl=discovery_service_url,
-        developerKey=api_key,
-        http=http_transport,
-        requestBuilder=request_builder,
-        model=alt_model,
-        cache_discovery=False,
-        **kwargs)  # pytype: disable=wrong-keyword-args
-
-  try:
-    # google-api-python-client made static_discovery the default in version 2,
-    # but it's not backward-compatible. There's no reliable way to check the
-    # package version, either.
-    resource = build(static_discovery=False)
-  except TypeError:
-    resource = build()
+  resource = discovery.build(
+      'earthengine',
+      VERSION,
+      discoveryServiceUrl=discovery_service_url,
+      developerKey=api_key,
+      http=http_transport,
+      requestBuilder=request_builder,
+      model=alt_model,
+      cache_discovery=False)
   resource._baseUrl = api_base_url
   return resource
 
@@ -614,8 +603,6 @@ def convert_to_table_file_format(format_str):
   Returns:
     A best guess at the corresponding TableFileFormat enum name.
   """
-  if format_str is None:
-    return 'CSV'
   format_str = format_str.upper()
   if format_str == 'GEOJSON':
     return 'GEO_JSON'

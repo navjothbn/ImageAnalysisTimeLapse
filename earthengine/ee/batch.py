@@ -203,14 +203,8 @@ class Export(object):
             - skipEmptyTiles: If true, skip writing empty (i.e. fully-masked)
               image tiles. Defaults to false.
             If exporting to Google Drive (default):
-            - driveFolder: The Google Drive Folder that the export will reside
-              in. Note: (a) if the folder name exists at any level, the output
-              is written to it, (b) if duplicate folder names exist, output is
-              written to the most recently modified folder, (c) if the folder
-              name does not exist, a new folder will be created at the root,
-              and (d) folder names with separators (e.g. 'path/to/file') are
-              interpreted as literal strings, not system paths. Defaults to
-              Drive root.
+            - driveFolder: The name of a unique folder in your Drive account to
+              export into. Defaults to the root of the drive.
             - driveFileNamePrefix: The Google Drive filename for the export.
               Defaults to the name of the task.
             If exporting to Google Cloud Storage:
@@ -271,7 +265,7 @@ class Export(object):
             such as 'crs_transform'.
 
       Returns:
-        An unstarted Task that exports the image as an Earth Engine asset.
+        An unstarted Task that exports the image to Drive.
       """
       config = _capture_parameters(locals(), ['image'])
       config = _prepare_image_export_config(image, config,
@@ -281,21 +275,12 @@ class Export(object):
     # Disable argument usage check; arguments are accessed using locals().
     # pylint: disable=unused-argument
     @staticmethod
-    def toCloudStorage(image,
-                       description='myExportImageTask',
-                       bucket=None,
-                       fileNamePrefix=None,
-                       dimensions=None,
-                       region=None,
-                       scale=None,
-                       crs=None,
-                       crsTransform=None,
-                       maxPixels=None,
-                       shardSize=None,
-                       fileDimensions=None,
-                       skipEmptyTiles=None,
-                       fileFormat=None,
-                       formatOptions=None,
+    def toCloudStorage(image, description='myExportImageTask',
+                       bucket=None, fileNamePrefix=None,
+                       dimensions=None, region=None, scale=None,
+                       crs=None, crsTransform=None, maxPixels=None,
+                       shardSize=None, fileDimensions=None,
+                       skipEmptyTiles=None, fileFormat=None, formatOptions=None,
                        **kwargs):
       """Creates a task to export an EE Image to Google Cloud Storage.
 
@@ -325,7 +310,7 @@ class Export(object):
         maxPixels: The maximum allowed number of pixels in the exported
             image. The task will fail if the exported region covers more
             pixels in the specified projection. Defaults to 100,000,000.
-        shardSize: Size in pixels of the tiles in which this image will be
+        shardSize: Size in pixels of the shards in which this image will be
             computed. Defaults to 256.
         fileDimensions: The dimensions in pixels of each image file, if the
             image is too large to fit in a single file. May specify a
@@ -351,21 +336,11 @@ class Export(object):
       return _create_export_task(config, Task.Type.EXPORT_IMAGE)
 
     @staticmethod
-    def toDrive(image,
-                description='myExportImageTask',
-                folder=None,
-                fileNamePrefix=None,
-                dimensions=None,
-                region=None,
-                scale=None,
-                crs=None,
-                crsTransform=None,
-                maxPixels=None,
-                shardSize=None,
-                fileDimensions=None,
-                skipEmptyTiles=None,
-                fileFormat=None,
-                formatOptions=None,
+    def toDrive(image, description='myExportImageTask', folder=None,
+                fileNamePrefix=None, dimensions=None, region=None,
+                scale=None, crs=None, crsTransform=None,
+                maxPixels=None, shardSize=None, fileDimensions=None,
+                skipEmptyTiles=None, fileFormat=None, formatOptions=None,
                 **kwargs):
       """Creates a task to export an EE Image to Drive.
 
@@ -396,7 +371,7 @@ class Export(object):
         maxPixels: The maximum allowed number of pixels in the exported
             image. The task will fail if the exported region covers more
             pixels in the specified projection. Defaults to 100,000,000.
-        shardSize: Size in pixels of the tiles in which this image will be
+        shardSize: Size in pixels of the shards in which this image will be
             computed. Defaults to 256.
         fileDimensions: The dimensions in pixels of each image file, if the
             image is too large to fit in a single file. May specify a
@@ -503,14 +478,8 @@ class Export(object):
             - fileFormat: The output format: "CSV" (default), "GeoJSON", "KML",
               "KMZ", or "SHP".
             If exporting to Google Drive (default):
-            - driveFolder: The Google Drive Folder that the export will reside
-              in. Note: (a) if the folder name exists at any level, the output
-              is written to it, (b) if duplicate folder names exist, output is
-              written to the most recently modified folder, (c) if the folder
-              name does not exist, a new folder will be created at the root,
-              and (d) folder names with separators (e.g. 'path/to/file') are
-              interpreted as literal strings, not system paths. Defaults to
-              Drive root.
+            - driveFolder: The name of a unique folder in your Drive
+              account to export into. Defaults to the root of the drive.
             - driveFileNamePrefix: The Google Drive filename for the export.
               Defaults to the name of the task.
             If exporting to Google Cloud Storage:
@@ -532,14 +501,9 @@ class Export(object):
     # Disable argument usage check; arguments are accessed using locals().
     # pylint: disable=unused-argument
     @staticmethod
-    def toCloudStorage(collection,
-                       description='myExportTableTask',
-                       bucket=None,
-                       fileNamePrefix=None,
-                       fileFormat=None,
-                       selectors=None,
-                       maxVertices=None,
-                       **kwargs):
+    def toCloudStorage(collection, description='myExportTableTask',
+                       bucket=None, fileNamePrefix=None,
+                       fileFormat=None, selectors=None, **kwargs):
       """Creates a task to export a FeatureCollection to Google Cloud Storage.
 
       Args:
@@ -553,14 +517,11 @@ class Export(object):
         selectors: The list of properties to include in the output, as a list
             of strings or a comma-separated string. By default, all properties
             are included.
-        maxVertices:
-            Max number of uncut vertices per geometry; geometries with more
-            vertices will be cut into pieces smaller than this size.
         **kwargs: Holds other keyword arguments that may have been deprecated
             such as 'outputBucket'.
 
       Returns:
-        An unstarted Task that exports the table to Google Cloud Storage.
+        An unstarted Task that exports the table.
       """
       config = _capture_parameters(locals(), ['collection'])
       config = _prepare_table_export_config(collection, config,
@@ -568,14 +529,9 @@ class Export(object):
       return _create_export_task(config, Task.Type.EXPORT_TABLE)
 
     @staticmethod
-    def toDrive(collection,
-                description='myExportTableTask',
-                folder=None,
-                fileNamePrefix=None,
-                fileFormat=None,
-                selectors=None,
-                maxVertices=None,
-                **kwargs):
+    def toDrive(collection, description='myExportTableTask',
+                folder=None, fileNamePrefix=None, fileFormat=None,
+                selectors=None, **kwargs):
       """Creates a task to export a FeatureCollection to Drive.
 
       Args:
@@ -590,9 +546,6 @@ class Export(object):
         selectors: The list of properties to include in the output, as a list
             of strings or a comma-separated string. By default, all properties
             are included.
-        maxVertices:
-            Max number of uncut vertices per geometry; geometries with more
-            vertices will be cut into pieces smaller than this size.
         **kwargs: Holds other keyword arguments that may have been deprecated
             such as 'driveFolder' and 'driveFileNamePrefix'.
 
@@ -605,10 +558,7 @@ class Export(object):
       return _create_export_task(config, Task.Type.EXPORT_TABLE)
 
     @staticmethod
-    def toAsset(collection,
-                description='myExportTableTask',
-                assetId=None,
-                maxVertices=None,
+    def toAsset(collection, description='myExportTableTask', assetId=None,
                 **kwargs):
       """Creates a task to export a FeatureCollection to an EE table asset.
 
@@ -616,9 +566,6 @@ class Export(object):
         collection: The feature collection to be exported.
         description: Human-readable name of the task.
         assetId: The destination asset ID.
-        maxVertices:
-            Max number of uncut vertices per geometry; geometries with more
-            vertices will be cut into pieces smaller than this size.
         **kwargs: Holds other keyword arguments that may have been deprecated.
 
       Returns:
@@ -670,14 +617,8 @@ class Export(object):
               Defaults to 1000 frames. By setting this explicitly, you may
               raise or lower the limit.
             If exporting to Google Drive (default):
-            - driveFolder: The Google Drive Folder that the export will reside
-              in. Note: (a) if the folder name exists at any level, the output
-              is written to it, (b) if duplicate folder names exist, output is
-              written to the most recently modified folder, (c) if the folder
-              name does not exist, a new folder will be created at the root,
-              and (d) folder names with separators (e.g. 'path/to/file') are
-              interpreted as literal strings, not system paths. Defaults to
-              Drive root.
+            - driveFolder: The name of a unique folder in your Drive account to
+              export into. Defaults to the root of the drive.
             - driveFileNamePrefix: The Google Drive filename for the export.
               Defaults to the name of the task.
             If exporting to Google Cloud Storage:
@@ -796,6 +737,7 @@ class Export(object):
       config = _prepare_video_export_config(collection, config,
                                             Task.ExportDestination.DRIVE)
       return _create_export_task(config, Task.Type.EXPORT_VIDEO)
+
 
 
 def _CheckConfigDisallowedPrefixes(config, prefix):
@@ -928,15 +870,9 @@ def _prepare_image_export_config(image, config, export_destination):
     asset_export_options[
         'earthEngineDestination'] = _build_earth_engine_destination(config)
     # This can only be set by internal users.
-    if 'tileSize' in config and 'shardSize' in config:
-      raise ee_exception.EEException(
-          'Both "shardSize" and "tileSize" cannot be set.')
     if 'tileSize' in config:
       asset_export_options['tileSize'] = {
           'value': int(config.pop('tileSize'))}
-    # "shardSize" is the old name for "tileSize".
-    if 'shardSize' in config:
-      asset_export_options['tileSize'] = {'value': int(config.pop('shardSize'))}
     if 'pyramidingPolicy' in config:
       pyramiding_policy = config.pop('pyramidingPolicy')
       if '.default' in pyramiding_policy:
@@ -965,6 +901,11 @@ def _prepare_image_export_config(image, config, export_destination):
   # - All the values that would go into the PixelGrid should have been folded
   #   into the image's Expression.
   # - The request ID will be populated when the Task is created.
+
+  if 'shardSize' in config:
+    raise ee_exception.EEException(
+        'shardSize is not supported with the Cloud API.')
+
   # We've been deleting config parameters as we handle them. Anything left
   # over is a problem.
   if config:
@@ -1053,9 +994,6 @@ def _prepare_table_export_config(collection, config, export_destination):
     # tuple or other non-list iterable.
     request['selectors'] = list(config.pop('selectors'))
 
-  if 'maxVertices' in config:
-    request['maxVertices'] = {'value': int(config.pop('maxVertices'))}
-
   # This can only be set by internal users.
   if 'maxWorkers' in config:
     request['maxWorkerCount'] = {'value': int(config.pop('maxWorkers'))}
@@ -1100,6 +1038,8 @@ def _prepare_video_export_config(collection, config, export_destination):
     raise ee_exception.EEException(
         'Unknown configuration options: {}.'.format(config))
   return request
+
+
 
 
 def _build_image_file_export_options(config, export_destination):
@@ -1150,8 +1090,6 @@ def _build_image_file_export_options(config, export_destination):
       }
     if config.pop('skipEmptyTiles', False):
       geo_tiff_options['skipEmptyFiles'] = True
-    if config.get('shardSize', None):
-      geo_tiff_options['tileSize'] = {'value': config.pop('shardSize')}
     if geo_tiff_options:
       file_export_options['geoTiffOptions'] = geo_tiff_options
   elif file_format == 'TF_RECORD_IMAGE':
@@ -1279,31 +1217,6 @@ def _build_video_file_export_options(config, export_destination):
     raise ee_exception.EEException(
         '"{}" is not a valid export destination'.format(export_destination))
   return file_export_options
-
-
-def _prepare_classifier_export_config(classifier, config, export_destination):
-  """Performs all preparation steps for a classifier export.
-
-  Args:
-    classifier: The Classifier to be exported.
-    config: All the user-specified export parameters. May be modified.
-    export_destination: One of the Task.ExportDestination values.
-
-  Returns:
-    A config dict containing all information required for the export.
-  """
-  request = {}
-  request['expression'] = classifier
-  if 'description' in config:
-    request['description'] = config.pop('description')
-
-  if export_destination == Task.ExportDestination.ASSET:
-    request['assetExportOptions'] = {
-        'earthEngineDestination': _build_earth_engine_destination(config)
-    }
-  else:
-    raise ValueError('Only the "ASSET" destination type is supported.')
-  return request
 
 
 def _build_drive_destination(config):

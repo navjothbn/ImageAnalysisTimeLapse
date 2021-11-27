@@ -98,6 +98,7 @@ class Image(element.Element):
     """Imports API functions to this class."""
     if not cls._initialized:
       apifunction.ApiFunction.importApi(cls, 'Image', 'Image')
+      apifunction.ApiFunction.importApi(cls, 'Window', 'Image', 'focal_')
       cls._initialized = True
 
   @classmethod
@@ -671,7 +672,7 @@ class Image(element.Element):
   def clip(self, clip_geometry):
     """Clips an image to a Geometry or Feature.
 
-    The output bands correspond exactly to the input bands, except data not
+    The output bands correspond exactly the input bands, except data not
     covered by the geometry is masked. The output image retains the
     metadata of the input image.
 

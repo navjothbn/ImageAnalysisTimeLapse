@@ -7,13 +7,13 @@ import re
 import os
 import stat
 import plistlib
-from io import StringIO
 import platform
 import time
 import signal
 import sys
 import fcntl
 import select
+import io
 
 DEFAULT_BS = 512
 BS_UNITS = {'b': 512, 'k': 1024, 'm': 1048576, 'g': 1073741824}
@@ -88,7 +88,8 @@ def calc_insize(args, bs):
                 if PLATFORM == "Darwin":
                     try:
                         plist = subprocess.check_output(["diskutil", "info", "-plist", infile])
-                        d = plistlib.readPlist(StringIO.StringIO(plist))
+                        d=plistlib.readPlistFromString(plist)
+                        # d = plistlib.readPlist(io.StringIO(plist))
                         insize = d['TotalSize']
                     except subprocess.CalledProcessError:
                         # diskutil returned an error - infile probably doesn't exist. whatever, dd will error.

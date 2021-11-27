@@ -118,21 +118,16 @@ class FeatureCollection(collection.Collection):
     return painted.getMapId({})
 
   def getDownloadURL(self, filetype=None, selectors=None, filename=None):
-    """Gets a download URL.
-
-    When the URL is accessed, the FeatureCollection is downloaded in one of
-    several formats.
+    """Get a download URL for this feature collection.
 
     Args:
-      filetype: The format of download, one of: "csv", "json", "geojson", "kml",
-          "kmz" ("json" outputs GeoJSON). If unspecified, defaults to "csv".
-      selectors: Feature property names used to select the attributes to be
-          downloaded. If unspecified, all properties are included.
-      filename: Name of the file to be downloaded; extension is appended by
-          default. If unspecified, defaults to "table".
+      filetype: The filetype of download, either CSV or JSON. Defaults to CSV.
+      selectors: The selectors that should be used to determine which attributes
+          will be downloaded.
+      filename: The name of the file to be downloaded.
 
     Returns:
-      A URL to download this FeatureCollection.
+      A URL to download the specified feature collection.
     """
     request = {}
     request['table'] = self

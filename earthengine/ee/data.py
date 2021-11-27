@@ -93,7 +93,7 @@ _thread_locals = _ThreadLocals()
 _PROFILE_RESPONSE_HEADER_LOWERCASE = 'x-earth-engine-computation-profile'
 
 # The HTTP header through which profiling is requested when using the Cloud API.
-_PROFILE_REQUEST_HEADER = 'X-Earth-Engine-Computation-Profiling'
+_PROFILE_REQUEST_HEADER = 'X-Earth-Engine-Computation-Profile'
 
 # The HTTP header through which a user project override is provided.
 _USER_PROJECT_OVERRIDE_HEADER = 'X-Goog-User-Project'
@@ -228,8 +228,8 @@ def get_persistent_credentials():
   except IOError:
     raise ee_exception.EEException(
         'Please authorize access to your Earth Engine account by '
-        'running\n\nearthengine authenticate\n\n'
-        'in your command line, and then retry.')
+        'running\n\nearthengine authenticate\n\nin your command line, and then '
+        'retry.')
 
 
 def reset():
@@ -394,6 +394,8 @@ def profiling(hook):
     yield
   finally:
     _thread_locals.profile_hook = saved_hook
+
+
 
 
 @deprecation.Deprecated('Use getAsset')
@@ -1296,6 +1298,8 @@ def exportMap(request_id, params):
       _get_cloud_api_resource().projects().map().export)
 
 
+
+
 def _prepare_and_run_export(request_id, params, export_endpoint):
   """Starts an export task running.
 
@@ -1341,19 +1345,19 @@ def startIngestion(request_id, params, allow_overwrite=False):
       fail as it cannot be safely retried.
     params: The object that describes the import task, which can
         have these fields:
-          name (string) The destination asset id (e.g.,
-             "projects/earthengine-legacy/assets/users/foo/bar").
+          id (string) The destination asset id (e.g. users/foo/bar).
           tilesets (array) A list of Google Cloud Storage source file paths
             formatted like:
               [{'sources': [
-                  {'uris': ['foo.tif', 'foo.prj']},
-                  {'uris': ['bar.tif', 'bar.prj']},
+                  {'primaryPath': 'foo.tif', 'additionalPaths': ['foo.prj']},
+                  {'primaryPath': 'bar.tif', 'additionalPaths': ['bar.prj'},
               ]}]
             Where path values correspond to source files' Google Cloud Storage
             object names, e.g. 'gs://bucketname/filename.tif'
           bands (array) An optional list of band names formatted like:
             [{'id': 'R'}, {'id': 'G'}, {'id': 'B'}]
-        In general, this is a dict representation of an ImageManifest.
+        If you are using the Cloud API, this object must instead be a dict
+        representation of an ImageManifest.
     allow_overwrite: Whether the ingested image can overwrite an
         existing version.
 
@@ -1396,13 +1400,13 @@ def startTableIngestion(request_id, params, allow_overwrite=False):
       fail as it cannot be safely retried.
     params: The object that describes the import task, which can
         have these fields:
-          name (string) The destination asset id (e.g.,
-             "projects/earthengine-legacy/assets/users/foo/bar").
+          id (string) The destination asset id (e.g. users/foo/bar).
           sources (array) A list of GCS (Google Cloud Storage) file paths
             with optional character encoding formatted like this:
-            "sources":[{"uris":["gs://bucket/file.shp"],"charset":"UTF-8"}]
+            "sources":[{"primaryPath":"gs://bucket/file.shp","charset":"UTF-8"}]
             Here 'charset' refers to the character encoding of the source file.
-        In general, this is a dict representation of a TableManifest.
+        If you are using the Cloud API, this object must instead be a dict
+        representation of a TableManifest.
     allow_overwrite: Whether the ingested image can overwrite an
         existing version.
   Returns:
