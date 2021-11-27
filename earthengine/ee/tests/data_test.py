@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 """Test for the ee.data module."""
 
-from unittest import mock
-
 import httplib2
+import mock
 
 
 import unittest
@@ -183,7 +182,7 @@ class DataTest(unittest.TestCase):
   @mock.patch.object(
       ee.data,
       'getAlgorithms',
-      return_value=apitestcase.GetAlgorithms(),
+      return_value=apitestcase.BUILTIN_FUNCTIONS,
       autospec=True)
   def testGetDownloadId(self, _):
     cloud_api_resource = mock.MagicMock()

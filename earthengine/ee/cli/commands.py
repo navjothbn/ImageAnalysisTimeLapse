@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# Lint as: python2, python3
 """Commands supported by the Earth Engine command line interface.
 
 Each command is implemented by extending the Command class. Each class
@@ -17,7 +18,6 @@ import calendar
 from collections import Counter
 import datetime
 import json
-import logging
 import os
 import re
 import six
@@ -32,23 +32,16 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 TENSORFLOW_INSTALLED = False
 # pylint: disable=g-import-not-at-top
 try:
-  # Suppress non-error logs while TF initializes
-  old_level = logging.getLogger().level
-  logging.getLogger().setLevel(logging.ERROR)
   import tensorflow.compat.v1 as tf
   from tensorflow.compat.v1.saved_model import utils as saved_model_utils
   from tensorflow.compat.v1.saved_model import signature_constants
   from tensorflow.compat.v1.saved_model import signature_def_utils
-  # This triggers a warning about disable_resource_variables
   tf.disable_v2_behavior()
   # Prevent TensorFlow from logging anything at the python level.
   tf.logging.set_verbosity(tf.logging.ERROR)
-
   TENSORFLOW_INSTALLED = True
 except ImportError:
   pass
-finally:
-  logging.getLogger().setLevel(old_level)
 
 TENSORFLOW_ADDONS_INSTALLED = False
 # pylint: disable=g-import-not-at-top
@@ -177,7 +170,7 @@ def _comma_separated_pyramiding_policies(string):
   redvalues = []
   for value in values:
     value = value.upper()
-    if value not in {'MEAN', 'SAMPLE', 'MIN', 'MAX', 'MODE', 'MEDIAN'}:
+    if value not in {'MEAN', 'SAMPLE', 'MIN', 'MAX', 'MODE'}:
       raise argparse.ArgumentTypeError(error_msg.format(string))
     redvalues.append(value)
   return redvalues
@@ -698,6 +691,8 @@ class AssetCommand(Dispatcher):
   ]
 
 
+
+
 class CopyCommand(object):
   """Creates a new Earth Engine asset as a copy of another asset."""
 
@@ -766,6 +761,8 @@ class CreateCommand(Dispatcher):
       CreateCollectionCommand,
       CreateFolderCommand,
   ]
+
+
 
 
 class ListCommand(object):
@@ -1837,6 +1834,8 @@ class ModelCommand(Dispatcher):
           print(
               'Warning: TensorFlow Addons not found. Models that use '
               'non-standard ops may not work.')
+
+
 
 EXTERNAL_COMMANDS = [
     AuthenticateCommand,

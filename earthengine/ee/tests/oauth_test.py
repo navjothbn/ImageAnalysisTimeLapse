@@ -3,7 +3,8 @@
 
 
 import json
-from unittest import mock
+import mock
+
 from six.moves.urllib import parse
 
 import tempfile

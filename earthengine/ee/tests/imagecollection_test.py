@@ -3,7 +3,7 @@
 
 
 
-from unittest import mock
+import mock
 
 import unittest
 import ee
@@ -89,6 +89,7 @@ class ImageCollectionTestCase(apitestcase.ApiTestCase):
           expected_collection.serialize(for_cloud_api=True),
           collection.serialize(for_cloud_api=True))
       self.assertEqual({}, params)
+
 
 if __name__ == '__main__':
   unittest.main()
