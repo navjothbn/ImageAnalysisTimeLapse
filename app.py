@@ -1,4 +1,4 @@
-import earthengine.ee as ee
+import ee
 import os
 import datetime
 import geopandas as gpd
