@@ -1070,4 +1070,6 @@ def app():
                             st.error(
                                 "Something went wrong. You probably requested too much data. Try reducing the ROI or timespan."
                             )
-app()                            
+if __name__ == '__main__':
+    app()   
+                     
