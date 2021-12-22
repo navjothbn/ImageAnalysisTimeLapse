@@ -1,18 +1,12 @@
-folium==0.12.1.post1
-geemap
+--find-links=https://girder.github.io/large_image_wheels GDAL
 geopandas
-google_api_python_client
-google_auth_httplib2
-httplib2
-httplib2shim
-Image
-ipykernel
-ipython
-Pillow
-protobuf
-setuptools
-Shapely
-six
+keplergl
+palettable
+# pygdal==3.2.2.10
+localtileserver
 streamlit
-
-earthengine-api
+streamlit-folium
+streamlit-keplergl
+streamlit-bokeh-events
+git+git://github.com/giswqs/leafmap
+git+git://github.com/giswqs/geemap
